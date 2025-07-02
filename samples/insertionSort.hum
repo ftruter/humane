@@ -1,0 +1,24 @@
+insertionSort = (unsorted List(of T)) -> List(of T)
+    { Builds the final sorted list one item at a time.
+      Efficient for small or mostly-sorted lists.
+      T must be a comparable type. }
+
+    n = unsorted.length
+    sortedList = unsorted.copy
+
+    if n <= 1 return sortedList
+
+    { Iterate from the second element to the end }
+    for i in 1:n-1
+        key = sortedList[i]
+        j = i - 1
+
+        { Move elements of sortedList[0..i-1] that are greater than key,
+          to one position ahead of their current position }
+        while j >= 0 and key < sortedList[j]
+            sortedList[j+1] = sortedList[j]
+            j = j - 1
+
+        sortedList[j+1] = key
+
+    sortedList

@@ -1,0 +1,60 @@
+mergeSort_parallel = (list List[T]) -> List[T]
+    { A parallel version of Merge Sort using the `parallel` block.
+      T must be a comparable type. }
+
+    merge = private (left List(of T), right List(of T)) -> List(of T)
+        { Helper function for mergeSort. Merges two sorted lists. }
+        result = List(of T)()
+        i = 0
+        j = 0
+
+        while i < left.length and j < right.length
+            if left[i] <= right[j]
+                result.append(left[i])
+                i = i + 1
+            else
+                result.append(right[j])
+                j = j + 1
+
+        { Append any remaining elements }
+        result.append(left[i:])
+        result.append(right[j:])
+        result
+
+    n = list.length
+    if n <= 1 return list
+
+    { For very small lists, the overhead of creating parallel tasks
+      can be slower than just doing the work. A smart compiler
+      might even make this decision automatically. For example: }
+    if n < 1000  { Threshold for parallelism }
+        return mergeSort(list) { Assuming the sequential version exists }
+
+    mid = n / 2
+    leftHalf = list[0:mid]
+    rightHalf = list[mid:n]
+
+    parallel
+        sortedLeft = parallelMergeSort(leftHalf)
+        sortedRight = parallelMergeSort(rightHalf)
+
+    { The `parallel` block implicitly waits for both tasks to complete
+      before continuing. This is a "join" operation. }
+
+    merge(sortedLeft, sortedRight)
+
+mergeSort_recursive = (list List(of T)) -> List(of T)
+    { An efficient, stable, recursive sorting algorithm.
+      T must be a comparable type. }
+
+    n = list.length
+    if n <= 1 return list
+
+    mid = n / 2
+    leftHalf = list[0:mid]
+    rightHalf = list[mid:n]
+
+    sortedLeft = mergeSort(leftHalf)
+    sortedRight = mergeSort(rightHalf)
+
+    merge(sortedLeft, sortedRight)

@@ -1,0 +1,38 @@
+heapSort = (unsorted List(of T)) -> List(of T)
+    { An efficient in-place comparison-based sort.
+      T must be a comparable type. }
+
+    heapify = private (list List(of T), n Int, i Int)
+        { To heapify subtree rooted at index i. n is size of heap. }
+        largest = i     { Initialize largest as root }
+        left = 2 * i + 1
+        right = 2 * i + 2
+
+        { See if left child of root exists and is greater than root }
+        if left < n and list[largest] < list[left]
+            largest = left
+
+        { See if right child of root exists and is greater than root }
+        if right < n and list[largest] < list[right]
+            largest = right
+
+        { Change root, if needed }
+        if largest != i
+            list[i], list[largest] = list[largest], list[i]
+            { Heapify the root of the affected sub-tree }
+            heapify(list, n, largest)
+
+    sortedList = unsorted.copy()
+    n = sortedList.length
+
+    { 1. Build a maxheap. }
+    for i in (n/2 - 1):-1:0
+        heapify(sortedList, n, i)
+
+    { 2. One by one extract elements }
+    for i in (n-1):-1:1
+        sortedList[i], sortedList[0] = sortedList[0], sortedList[i]
+        heapify(sortedList, i, 0)
+
+    sortedList
+    

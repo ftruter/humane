@@ -1,0 +1,29 @@
+bubbleSort = import 'bubbleSort.hum'
+fibonacci_recursive, fibonacci_generator = import 'fibonacci.hum'
+heapSort = import 'heapSort.hum'
+insertionSort = import 'insertionSort.hum'
+mergeSort_parallel, mergeSort_recursive = import 'mergeSort.hum'
+quickSort, quickSort_parallel = import 'quickSort.hum'
+
+main = ()
+    age = 25
+    isValid = true
+    pi = 3.14159
+    name = 'Gracie''s Tax Bar'
+
+    numbers = [64, 34, 25, 12, 22, 11, 90, 5, 77]
+    print('Original List: [numbers]')
+    print('') { Prints a blank line }
+
+    print('Bubble Sort:     {bubbleSort(numbers)}')
+    print('Insertion Sort:  {insertionSort(numbers)}')
+    print('Merge Sort:      {mergeSort(numbers)}')
+    print('Quick Sort:      {quickSort(numbers)}')
+    print('Heap Sort:       {heapSort(numbers)}')
+
+main() { Execute the main function }
+
+
+test 'Test fibonacci sequence'
+    assert fibonacci(5) == 5
+    

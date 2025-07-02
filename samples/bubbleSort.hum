@@ -1,0 +1,20 @@
+bubbleSort = (unsorted List(of T)) -> List(of T)
+    { A simple but inefficient sorting algorithm.
+      T must be a comparable type. }
+
+    n = unsorted.length
+    sortedList = unsorted.copy() { Work on a copy to not modify the original list }
+
+    if n <= 1 return sortedList
+
+    for i in 0:n-1
+        swapped = false
+        for j in 0:n-i-2
+            if sortedList[j] > sortedList[j+1]
+                sortedList[j], sortedList[j+1] = sortedList[j+1], sortedList[j]
+                swapped = true
+
+        { If no two elements were swapped by inner loop, then break }
+        if not swapped break
+
+    return sortedList

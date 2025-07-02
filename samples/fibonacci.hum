@@ -1,0 +1,16 @@
+fibonacci_recursive = (n U32 = 0) -> U32
+    { returns the n-th Fibonacci number}
+    if n <= 2 return n
+    fibonacci(n-1) + fibonacci(n-2)   { last expression is automatically returned }
+
+fibonacci_generator = () -> U32..
+    { generates an infinite sequence of Fibonacci numbers. NB. Stop iterating when you've had enough! }
+    a = 1
+    b = 1
+    yield a
+    yield b
+    do
+        a , b = b , a + b
+        yield b
+        continue
+
