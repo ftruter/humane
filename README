@@ -97,7 +97,7 @@ humane
     fibonacci = (
         { Calculates the `n`-th Fibonacci number }
         n U32 = 0   { index of number in Fibonacci sequence }
-    ) U32 
+    ) -> U32 
         if n <= 2 return n
         fibonacci(n-1) + fibonacci(n-2)   { last expression is automatically returned }
 
@@ -121,9 +121,9 @@ humane
 ```
     Foo = class
         name String
-        bar = () String
-            'You''ve been foo-barred' { doesn't reference the instance of Foo }
-        upper = () String
+        bar = () -> String
+            'You''ve been foo-barred'  { doesn't reference the instance of Foo }
+        upper = () -> String
             name.toUpperCase(invariantCulture) { does reference `this.name` }
 
     one = Foo(name = 'hello') { allocate space for one Foo and invoke it's synthesized `init`}
@@ -135,7 +135,7 @@ humane
     print(Foo.upper())   {raises InstanceMethodCalledOnClassError('`upper` requires an instance of `Foo`')}
 
     one.name = 'world'
-    {calling functions that take no arguments you can omit the braces}
+    { calling functions that take no arguments you can omit the braces }
     print(one.name)  {prints 'world'}
     print(one.bar)  {prints 'You've been foo-barred'}
     print(Foo.bar)  {prints 'You've been foo-barred'}
@@ -172,7 +172,7 @@ So if the programmer writes a function:-
 
 humane
 ```
-  average = (numerator Float, denominator Float)
+  average = (numerator Float, denominator Float) -> Float
     numerator / denominator
 ```
 
@@ -182,7 +182,7 @@ There are several ways to avoid that, but let's deal with it inside `average` fu
 
 humane
 ```
-    average = (numerator Float, denominator Float)
+    average = (numerator Float, denominator Float) -> Float
         numerator / denominator
             except DivisionByZero Float.nan {explicitly return NaN}
 ```
@@ -191,7 +191,7 @@ But did you know that very small non-zero values for the denominator will cause 
 
 humane
 ```
-    average = (numerator Float, denominator Float)
+    average = (numerator Float, denominator Float) -> Float
         numerator / denominator
             except DivisionByZero Float.nan {explicitly return NaN}
             except Overflow
@@ -270,7 +270,7 @@ Creating an instance of an Error (or descendant) automatically exits that block 
 
 humane
 ```
-  Car class
+  Car = class
     registration String
     colour String
     make String
@@ -278,7 +278,7 @@ humane
       this.registration = registration
       this.make = make | ''
       this.colour = colour | ''
-    String
+    ->String
       '{registration} {colour} {make}'.trimmmed
 
   myMonster = Car('LD21MON', 'blue', 'Ford')
@@ -299,7 +299,7 @@ humane
     `then` phase2Time Duration,
     `at` phase2Power Power?
   )
-    return {implementation omitted for brevity}
+    return {...implementation omitted for brevity}
 
   {note that Minutes inherits from Duration, and Watts from Power}
 
@@ -356,100 +356,114 @@ humane
     true > 0 default 1
 
   Number = abstract class
-      zero = static This(0)
+    zero = static This(0)
 
-      {The follow abstract static methods must be implemented by derived types}
-      minPositive = static () This 
-      maxPositive = static () This 
-      minNegative = static () This
-      maxNegative = static () This
-      nextLargerNumber = () This
-      nextSmallerNumber = () This
-      bitCount = static () This
+    {The follow abstract static methods must be implemented by derived types}
+    minPositive = static () -> This 
+    maxPositive = static () -> This 
+    minNegative = static () -> This
+    maxNegative = static () -> This
+    nextLargerNumber = () -> This
+    nextSmallerNumber = () -> This
+    bitCount = static () -> This
 
-  FloatingPointNumber = abstract Number
-  F8 = FloatingPointNumber {IEEE 754-inspired 1-4-3 format}
-      minPositive = static () This 0.001953125
-      maxPositive = static () This 240
-      minNegative = static () This -0.001953125
-      maxNegative = static () This -240
-      nextLargerNumber = () This NotImplemented
-      nextSmallerNumber = () This NotImplemented
-      bitCount = static () This 8
+  FloatingPointNumber = abstract class Number
+  F8 = class FloatingPointNumber {IEEE 754-inspired 1-4-3 format}
+    minPositive = static () -> This 0.001953125
+    maxPositive = static () -> This 240
+    minNegative = static () -> This -0.001953125
+    maxNegative = static () -> This -240
+    nextLargerNumber = () -> This NotImplemented
+    nextSmallerNumber = () -> This NotImplemented
+    bitCount = static () -> This 8
 
-  F16 = FloatingPointNumber {IEEE 754-half precision 1-5-10 format}
-      minPositive = static () This 2 ^ -24
-      maxPositive = static () This 65504
-      minNegative = static () This -2 ^ -24
-      maxNegative = static () This -65504
-      nextLargerNumber = () This NotImplemented
-      nextSmallerNumber = () This NotImplemented
-      bitCount = static () This 16
+  F16 = class FloatingPointNumber {IEEE 754-half precision 1-5-10 format}
+    minPositive = static () -> This 2 ^ -24
+    maxPositive = static () -> This 65504
+    minNegative = static () -> This -2 ^ -24
+    maxNegative = static () -> This -65504
+    nextLargerNumber = () -> This NotImplemented
+    nextSmallerNumber = () -> This NotImplemented
+    bitCount = static () -> This 16
 
-  F32 = FloatingPointNumber {IEEE 754-normal precision 1-8-23 format}
-      minPositive = static () This 2 ^ -149
-      maxPositive = static () This 3.402823466385288598117041834845169254e38
-      minNegative = static () This -2 ^ -149
-      maxNegative = static () This -3.402823466385288598117041834845169254e38
-      nextLargerNumber = () This NotImplemented
-      nextSmallerNumber = () This NotImplemented
-      bitCount = static () This 32
+  F32 = class FloatingPointNumber {IEEE 754-normal precision 1-8-23 format}
+    minPositive = static () -> This 2 ^ -149
+    maxPositive = static () -> This 3.402823466385288598117041834845169254e38
+    minNegative = static () -> This -2 ^ -149
+    maxNegative = static () -> This -3.402823466385288598117041834845169254e38
+    nextLargerNumber = () -> This NotImplemented
+    nextSmallerNumber = () -> This NotImplemented
+    bitCount = static () -> This 32
 
-  F64 = FloatingPointNumber {IEEE 754-double precision 1-11-52 format}
-      minPositive = static () This 2 ^ -1074
-      maxPositive = static () This 1.7976931348623157e308
-      minNegative = static () This -2 ^ -1074
-      maxNegative = static () This -1.7976931348623157e308
-      nextLargerNumber = () This NotImplemented
-      nextSmallerNumber = () This NotImplemented
-      bitCount = static () This 64
+  F64 = class FloatingPointNumber {IEEE 754-double precision 1-11-52 format}
+    minPositive = static () -> This 2 ^ -1074
+    maxPositive = static () -> This 1.7976931348623157e308
+    minNegative = static () -> This -2 ^ -1074
+    maxNegative = static () -> This -1.7976931348623157e308
+    nextLargerNumber = () -> This NotImplemented
+    nextSmallerNumber = () -> This NotImplemented
+    bitCount = static () -> This 64
 
-  F80 = FloatingPointNumber {IEEE 754-extended precision 1-15-64 format}
-      minPositive = static () This 2 ^ -16508
-      maxPositive = static () This 3.940468503986436150e4931
-      minNegative = static () This -2 ^ -16508
-      maxNegative = static () This -3.940468503986436150e4931
-      nextLargerNumber = () This NotImplemented
-      nextSmallerNumber = () This NotImplemented
-      bitCount = static () This 64
+  F80 = class FloatingPointNumber {IEEE 754-extended precision 1-15-64 format}
+    minPositive = static () -> This 2 ^ -16508
+    maxPositive = static () -> This 3.940468503986436150e4931
+    minNegative = static () -> This -2 ^ -16508
+    maxNegative = static () -> This -3.940468503986436150e4931
+    nextLargerNumber = () -> This NotImplemented
+    nextSmallerNumber = () -> This NotImplemented
+    bitCount = static () -> This 64
 
-  F128 = FloatingPointNumber {IEEE 754-quad precision 1-15-112 format}
-      minPositive = static () This 1.026e−4967
-      maxPositive = static () This 1.7026e4932
-      minNegative = static () This -1.026e−4967
-      maxNegative = static () This -1.7026e4932
-      nextLargerNumber = () This NotImplemented
-      nextSmallerNumber = () This NotImplemented
-      bitCount = static () This 64
+  F128 = class FloatingPointNumber {IEEE 754-quad precision 1-15-112 format}
+    minPositive = static () -> This 1.026e−4967
+    maxPositive = static () -> This 1.7026e4932
+    minNegative = static () -> This -1.026e−4967
+    maxNegative = static () -> This -1.7026e4932
+    nextLargerNumber = () -> This NotImplemented
+    nextSmallerNumber = () -> This NotImplemented
+    bitCount = static () -> This 64
 
   Float = F64
   {NB `Float` is an alias for whichever of F8...128 is "natural" on the current CPU, typically F64 at the time of writing (2025)}
 
-  UnsignedInteger = U8 | U16 | U32 | U64 | U128 | UInt 
+  UnsignedInteger = abstract class Number
+  U8 = class UnsignedInteger
+  U8 = class UnsignedInteger
+  U16 = class UnsignedInteger
+  U32 = class UnsignedInteger
+  U64 = class UnsignedInteger
+  U128 = class UnsignedInteger
+  UInt = U64
   {NB `UInt` is an alias for whichever of U8...128 is "natural" on the current CPU, typically U64 at the time of writing (2025)}
 
-  SignedInteger = I8 | I16 | I32 | I64 | I128 | Int 
-  {NB `Int` is an alias for which ever of I8...128 is "natural" on the current CPU, typically U64 at the time of writing (2025)}
+  SignedInteger = abstract class Number
+  I8 = class SignedInteger
+  I8 = class SignedInteger
+  I16 = class SignedInteger
+  I32 = class SignedInteger
+  I64 = class SignedInteger
+  I128 = class SignedInteger
+  Int = I64
+  {NB `Int` is an alias for which ever of I8...128 is "natural" on the current CPU, typically I64 at the time of writing (2025)}
 
-  Date abstract class
+  Date = abstract class
 
-  Date16 Date {from 1950 through 2130, accuracy one day}
-  Date32 Date {up to 5889 years in the past or future, accuracy one day}
-  Date64 Date {up to 25E15 years in the past or future, accuracy one day}
+  Date16 = class Date {from 1950 through 2130, accuracy one day}
+  Date32 = class Date {up to 5889 years in the past or future, accuracy one day}
+  Date64 = class Date {up to 25E15 years in the past or future, accuracy one day}
 
-  Time abstract class
-  Time16 Time {up to one day, accuracy 1.32 seconds}
-  Time32 Time {up to one day, accuracy 20.11 microseconds}
-  Time64 Time {up to one day, accuracy 4.68 femtoseconds}
+  Time = abstract class
+  Time16 = class Time {up to one day, accuracy 1.32 seconds}
+  Time32 = class Time {up to one day, accuracy 20.11 microseconds}
+  Time64 = class Time {up to one day, accuracy 4.68 femtoseconds}
 
-  Moment abstract Date, Time
-  Moment32 Moment 
+  Moment = abstract class Date, Time
+  Moment32 = class Moment 
       date Date16
       time Time16
-  Moment64 Moment 
+  Moment64 = class Moment 
       date Date32
       time Time32
-  Moment128 Moment 
+  Moment128 = class Moment 
       date Date64
       time Time64
 ```
@@ -525,7 +539,8 @@ humane
 
 humane
 ```
-    SomeRemoteModule = import 'git@bitbucket.org:team/project.git' until '1.x' { expects the team to publish at least `module.hum` in the root and maintain seperate version branches }
+    SomeRemoteModule = import 'git@bitbucket.org:team/project.git' until '1.x' 
+    { expects the team to publish at least `module.hum` in the root and maintain seperate version branches }
 ```
 
 The compiler will enumerate all the branches on the repository that start with "1." and pull down the latest one into a local folder `.imports/bitbucket/team/project/1.2` if that folder doesn't already exist.
@@ -557,32 +572,29 @@ humane
     topLevelCode = import 'main.hum'
 
     Module(
-      name = 'Antipesto',
       author = 'Idiot Number One',
-      version = '1.3.1',
-      warning = 'This version has a serious security flaw and should not be used. Upgrade to 1.4.0 as soon as possible',
       exports = [
           Class1,
           Enum2,
+          Graphics,
           PI,
-          Graphics
       ],
-      generateCHeader = 'antipesto.h'
+      generateCHeader = 'antipesto.h',
+      name = 'Antipesto',
+      version = '1.3.1',
+      warning = 'This version has a serious security flaw and should not be used. Upgrade to 1.4.0 as soon as possible',
     )
 
     Executable(
       author = 'Acme Corp',
-      version = '1.4.2',
       copyright = '(C) 2025 Acme Corp',
       license = 'MIT',
-      main = topLevelCode
+      main = topLevelCode,
+      version = '1.4.2',
     )
 
     Tests(
       parallelism = 10,
-      redirects = {
-        'https://acmecorp.com/api': 'http://localhost:8443'
-      },
       prerequisites = [
         Server(
           executable = './testServer/start', 
@@ -594,6 +606,9 @@ humane
           terminateOnCompletion = true
         )
       ],
+      redirects = {
+        'https://acmecorp.com/api': 'http://localhost:8443'
+      },
     )
 ```
 
@@ -616,73 +631,104 @@ Following on from the previous example `module.hum` we can import that, assuming
 
 This statement follows this pattern:-
 
-bnf
+ebnf
 ```
-  "for" block-scoped-name "in" enumerable-expression (statement)?
-    (statement... | "break" | "continue" )*
+  "for" , block-scoped-name , "in" , enumerable-expression , statement ;
+  "for" , block-scoped-name , "in" , enumerable-expression ,
+    indent , 
+      { statement | "break" | "continue" } ,
+    dedent 
+  ;
 ```
 
 ### `do` ... `while`
 
 This statement follows this pattern:-
 
-bnf
+ebnf
 ```
-  "do" "while" condition
-    (statement... | "break" | "continue" )*
+  "do" , "while" , condition , statement ;
+  "do" , "while" , condition , 
+    indent ,
+      { statement | "break" | "continue" } ,
+    dedent
+  ;
 ```
 
 OR
 
-bnf
+ebnf
 ```
-    "do"
-        (statement... | "break" | "continue" )*
-        "while" condition
+  "do" , 
+    indent , 
+      { statement | "break" | "continue" } , 
+      "while" , condition
+    dedent ;
 ```
 
 ### `do` ... `until`
 
 This statement follows this pattern:-
 
-bnf
+ebnf
 ```
-    "do" statement "until" condition
-```
-
-OR
-
-bnf
-```
-    "do"
-        (statement... | "break" | "continue" )*
-        "until" condition
+  do-until-statement = do-until-line | do-until-block ;
+  do-until-line =
+    "do" , statement , "until" , condition 
+  ;
+  do-until-block =
+    "do" , 
+    indent ,
+      { statement | "break" | "continue" } , 
+      "until" , condition
+    dedent 
+  ;
 ```
 
 ### `if`, `elif` and `else`
 
 This statement follows this patterns:-
 
-bnf
+ebnf
 ```
-    "if" condition (statement | expression)
-    "if" condition
-        statement
-    "if" condition (statement | expression) "else" (statement | expression)
-    "if" condition
-        statement
-    ("elif" condition
-        statement)*
-    "else" 
-        statement  
+  if-statement = if-multiline | if-one-line ;
+
+  if-multiline = 
+    "if" , condition , 
+      indent, 
+        { statement } , 
+      dedent , 
+    { "elif" , condition , 
+      indent, 
+        { statement } , 
+      dedent 
+    } ,
+    [ "else" , 
+      indent, 
+        { statement } , 
+      dedent 
+    ]
+  ;
+
+  if-one-line = 
+    "if" , condition , (statement | expression) , 
+    { "elif" , condition , (statement | expression) } , 
+    [ "else" , (statement | expression) ]
+  ;
 ```
 
 ### Range expressions
 
-bnf
+Start and end are included in the range, stride must be integer.
+
+ebnf
 ```
-    start-expression ":" end-expression  # start and end are included in the range
-    start-expression ":" stride ":" end-expression [start and end are included in the range, stride is Int]
+    range-expression = 
+      start-expression , [ ":" , stride , ] ":" , end-expression ;
+    
+    start-expression = expression ;
+    stride = integer ;
+    end-expression = expression ;
 ```
 
 humane
