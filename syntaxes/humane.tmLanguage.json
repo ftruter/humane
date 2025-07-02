@@ -1,0 +1,145 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Humane",
+  "scopeName": "source.humane",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#constants" },
+    { "include": "#operators" },
+    { "include": "#types" },
+    { "include": "#functions" },
+    { "include": "#variables" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.humane",
+          "begin": "\\{",
+          "end": "\\}"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.humane",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.humane",
+              "match": "''"
+            },
+            {
+              "name": "meta.embedded.expression.humane",
+              "begin": "\\{",
+              "end": "\\}",
+              "beginCaptures": {
+                "0": { "name": "punctuation.section.embedded.begin.humane" }
+              },
+              "endCaptures": {
+                "0": { "name": "punctuation.section.embedded.end.humane" }
+              },
+              "patterns": [
+                {
+                  "include": "$self"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.humane",
+          "match": "\\b(if|elif|else|for|in|do|while|until|return|yield|break|continue|match|other|except|parallel|test|not)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.humane",
+          "match": "\\b(and|or)\\b"
+        },
+        {
+          "name": "keyword.declaration.humane",
+          "match": "\\b(class|abstract|enum|import|from|as|private|const|base)\\b"
+        },
+        {
+          "name": "keyword.operator.word.humane",
+          "match": "\\b(is|in)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.humane",
+          "match": "\\b\\d+\\.\\d+([eE][+-]?\\d+)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.humane",
+          "match": "\\b\\d+\\b"
+        },
+        {
+          "name": "constant.language.humane",
+          "match": "\\b(true|false|null|nan|infinity|∞)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.humane",
+          "match": "=|≔|\\?="
+        },
+        {
+          "name": "keyword.operator.comparison.humane",
+          "match": "==|!=|<=|>=|<|>|🟰|⩵|＝|≠|≤|≥"
+        },
+        {
+          "name": "keyword.operator.arithmetic.humane",
+          "match": "\\+|-|\\*|/|−|×|∕|÷"
+        },
+        {
+          "name": "keyword.operator.logical.unicode.humane",
+          "match": "∧|∨|¬"
+        },
+        {
+          "name": "keyword.operator.misc.humane",
+          "match": "\\?|:|\\|\\||\\.\\.\\.|,"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "entity.name.type.class.humane",
+          "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.humane",
+          "match": "\\b([a-z][a-zA-Z0-9_]*)(?=\\s*\\()"
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.language.humane",
+          "match": "\\b(this|base)\\b"
+        },
+        {
+          "name": "variable.other.humane",
+          "match": "\\b[a-z][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}
