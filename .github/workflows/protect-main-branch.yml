@@ -8,6 +8,8 @@ on:
 jobs:
   check-author:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check if push is from authorized user
         env:
