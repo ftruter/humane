@@ -46,18 +46,15 @@ main
 ### Step 3: Save and Apply
 Click **Create** to save the branch protection rule.
 
-## Alternative: Using GitHub CLI
+## Alternative: Using GitHub CLI (Quick Setup)
 
-If you have the GitHub CLI (`gh`) installed and authenticated, you can set up branch protection with this command:
+A helper script has been provided to automatically configure branch protection. If you have the GitHub CLI (`gh`) installed and authenticated, simply run:
 
 ```bash
-gh api repos/ftruter/humane/branches/main/protection \
-  --method PUT \
-  --field required_status_checks='{"strict":true,"contexts":["check-author"]}' \
-  --field enforce_admins=true \
-  --field required_pull_request_reviews='{"required_approving_review_count":0}' \
-  --field restrictions='{"users":["ftruter"],"teams":[]}'
+./.github/setup-branch-protection.sh
 ```
+
+This script will configure all the recommended protection rules automatically.
 
 ## Verification
 
