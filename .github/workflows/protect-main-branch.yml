@@ -1,0 +1,25 @@
+name: Protect Main Branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-author:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if push is from authorized user
+        env:
+          AUTHORIZED_USER: 'ftruter'
+          PUSHER: ${{ github.actor }}
+        run: |
+          echo "Push attempted by: $PUSHER"
+          echo "Authorized user: $AUTHORIZED_USER"
+          
+          if [ "$PUSHER" != "$AUTHORIZED_USER" ]; then
+            echo "::error::Unauthorized push to main branch. Only $AUTHORIZED_USER is allowed to push to main."
+            exit 1
+          else
+            echo "✓ Push authorized"
+          fi
