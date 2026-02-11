@@ -3,6 +3,10 @@ By J. Fred Truter, 2025
 
 Language specification is below
 
+## Contributing
+
+The main branch is protected and only the repository owner can push directly to it. All contributions should be made via pull requests. See [branch protection documentation](.github/BRANCH_PROTECTION.md) for details.
+
 ## License
 
 See [license](./LICENSE) file
