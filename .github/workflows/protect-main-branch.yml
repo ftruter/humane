@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Check if push is from authorized user
         env:
-          AUTHORIZED_USER: 'ftruter'
+          AUTHORIZED_USER: ${{ vars.AUTHORIZED_USER || 'ftruter' }}
           PUSHER: ${{ github.actor }}
         run: |
           echo "Push attempted by: $PUSHER"

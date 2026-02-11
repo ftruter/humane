@@ -6,8 +6,14 @@ This guide explains how to protect the main branch of this repository so that on
 
 A GitHub Actions workflow (`.github/workflows/protect-main-branch.yml`) has been added that will:
 - Check every push to the main branch
-- Verify that the push is from the authorized user (ftruter)
+- Verify that the push is from the authorized user (defaults to 'ftruter')
 - Reject pushes from unauthorized users
+
+**Configuration:**
+The authorized user can be configured using a repository variable:
+1. Go to Settings → Secrets and variables → Actions → Variables
+2. Create a new variable named `AUTHORIZED_USER` with your GitHub username
+3. If not set, it defaults to 'ftruter'
 
 **Note:** This workflow runs *after* the push, so it won't prevent the push but will mark the workflow as failed, providing visibility into unauthorized attempts.
 
@@ -31,7 +37,8 @@ main
 
 **Recommended Settings:**
 - ✓ **Require a pull request before merging**
-  - ✓ Require approvals (set to 0 if you want to approve your own PRs)
+  - ✓ Require approvals (set to 1 for better security)
+    - **Note:** As the sole maintainer, you'll need to approve your own PRs, or you can set this to 0 if you prefer to skip self-approval. For better security practices, consider setting to 1 even for self-approval as it adds a review step.
   - ✓ Dismiss stale pull request approvals when new commits are pushed
 - ✓ **Require status checks to pass before merging**
   - Add the workflow: `check-author`

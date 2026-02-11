@@ -4,9 +4,10 @@
 
 set -e
 
-REPO="ftruter/humane"
-BRANCH="main"
-AUTHORIZED_USER="ftruter"
+# Get repository from current git remote or allow override
+REPO="${1:-$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || echo "ftruter/humane")}"
+BRANCH="${2:-main}"
+AUTHORIZED_USER="${3:-ftruter}"
 
 echo "======================================"
 echo "Branch Protection Setup Script"
@@ -15,6 +16,11 @@ echo ""
 echo "Repository: $REPO"
 echo "Branch: $BRANCH"
 echo "Authorized User: $AUTHORIZED_USER"
+echo ""
+echo "Usage: $0 [repo] [branch] [user]"
+echo "  repo: Repository (default: auto-detect or ftruter/humane)"
+echo "  branch: Branch name (default: main)"
+echo "  user: Authorized user (default: ftruter)"
 echo ""
 
 # Check if gh is installed
@@ -36,12 +42,14 @@ echo ""
 
 # Create branch protection rule
 # Note: This uses the REST API to set comprehensive protection rules
+# We set required_approving_review_count to 1 for better security practices
+# Even though you're the sole maintainer, this ensures a review step before merging
 gh api \
   --method PUT \
   "repos/$REPO/branches/$BRANCH/protection" \
   --field required_status_checks='{"strict":true,"contexts":["check-author"]}' \
   --field enforce_admins=true \
-  --field required_pull_request_reviews='{"dismiss_stale_reviews":true,"require_code_owner_reviews":false,"required_approving_review_count":0}' \
+  --field required_pull_request_reviews='{"dismiss_stale_reviews":true,"require_code_owner_reviews":false,"required_approving_review_count":1}' \
   --field restrictions='{"users":["'"$AUTHORIZED_USER"'"],"teams":[],"apps":[]}' \
   --field required_linear_history=true \
   --field allow_force_pushes=false \
